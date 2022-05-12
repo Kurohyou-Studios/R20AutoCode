@@ -1,0 +1,53 @@
+.autoButtonContainer{
+  display:flex;
+  gap:0.5rem;
+  justify-content: center;
+}
+
+#autoDirectoryMonitorSpan{
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  margin: 1rem;
+  transition:background-position 3000ms ease-in-out;
+  background-image:radial-gradient(circle closest-side, white, transparent);
+  background-position:-140px;
+  background-repeat:no-repeat;
+}
+
+.cycled{
+  background-position:140px !important;
+}
+
+#sheetsandbox{
+  display:grid;
+  gap:0.5rem;
+}
+
+#autoUpdateLog{
+  display:grid;
+  gap:0.5rem;
+}
+#autoUpdateLog h4{
+  place-self:center;
+}
+#sheetsandbox hr{
+  width:100%;
+}
+#statusContainer{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0.5rem;
+  align-items:center;
+}
+#autoDirectoryMonitorSpan,
+#statusContainer > *{
+  width:100%;
+  margin:0;
+  padding:4px;
+  border: 1px solid var(--dark-secondarytext);
+  border-radius: 8px;
+  appearance: none;
+  text-align: center;
+  box-sizing:border-box;
+}
