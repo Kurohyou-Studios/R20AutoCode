@@ -12,7 +12,7 @@ In order to install the extension, you will need to use a chromium browser (Chro
 5. I recommend pinning the extension to the extension tray in your browser for easier access while working on conversion tasks.
 
 ## Using the Extension
-Currently, the extension only works with sheet files. To enable the extension's injected content in your sheet sandbox, simply click the extension's icon in your extension tray. A popup will drop down from the icon to tell you that the extension is now active. You should also notice that your sandbox tools have changed, and have been moved to the upper left corner of the browser window. Once the extension is enabled in your sandbox, follow these steps to begin monitoring your code:
+Currently, the extension only works with sheet files. Once the extension is enabled in your sandbox, follow these steps to begin monitoring your code:
 
 1. Click the `Select Directory` button in the modified sandbox tools container. A dialogue will appear asking you to select a directory to monitor. Make sure to select the directory that your HTML, CSS, and translation.json files are directly in (e.g. they are not in sub folders within the folder you select)
 2. Your browser will prompt you with a security prompt to ensure you want the site to have access to the contents of the folder.
@@ -43,3 +43,9 @@ This section will update with timestamped details about what updates the extensi
 This is the original Roll20 button for this and works as described in the wiki.
 ## Data Privacy
 The extension does not store any data collected from your computer between sessions. Once you close your browser, the extension loses all memory of what you did while it was running. The only place that the extension shares the data it collects while running is with the Roll20 site itself. It also only shares the specific files needed to update the Roll20 page. For the sheet sandbox, this is the html, css, and translation.json files indicated in the log.
+## Changelog
+## v1.00
+- Fixed display error with long file names
+- Changed scanning animation to be smoother
+- Update Manifest Permissions to be accurate to what the extension actually uses (only `declarativeContent`)
+- The extension no longer requires clicking on the extension's button in the extension tray

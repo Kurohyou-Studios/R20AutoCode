@@ -1,20 +1,27 @@
+//Colors for display
 const warningColor = '#eddf67';
 const gtgColor = '#448744';
-const handles = {
+
+//Object to hold the directory and file handles
+const sheetHandles = {
   directory:null,
+  subdirectories:[],
   files:{
-    translation:{handle:null,name:'',modified:0,errors:''},
-    html:{handle:null,name:'',modified:0,errors:''},
-    css:{handle:null,name:'',modified:0,errors:''}
+    translation:{handle:null,name:'',modified:0,errors:'',selected:false},
+    html:{handle:null,name:'',modified:0,errors:'',selected:false},
+    css:{handle:null,name:'',modified:0,errors:'',selected:false}
   },
-  interval:0
+  intervalID:0,
+  intervalStart:0,
 };
+//Cycle tracker for triggering class change that triggers the scanning animation
 let cycles = 0;
+//CSS words that will cause css to be thrown out. These CSS bits are loggable for more information.
 const evilLoggableCSSArr = [
   '\bdata:\b','eval','cookie','\bwindow\b','\bparent\b','\bthis\b', // suspicious javascript-type words
   'behaviou?r','expression','moz-binding','@charset','javascript','vbscript','\<','\\\\w'
 ];
-
+//High/low byte order characters that will cause css to be thrown out by Roll20
 const evilCSSBytes = [
   '[\x7f-\xff]', // high bytes -- suspect
   '[\x00-\x08\x0B\x0C\x0E-\x1F]', // low bytes -- suspect
@@ -23,16 +30,21 @@ const evilCSSBytes = [
 const evilCSSBytesRx = new RegExp(evilCSSBytes.join('|'));
 
 const resetHandles = async ()=>{
-  handles.directory = await getDirectory();//Query the user for the directory to monitor
-  Object.keys(handles.files).forEach((key)=>handles[key] = {handle:null,modified:0,errors:''});//Clear the preexisting handles.
-  handles.interval = 0;
-  const logHead = autoUpdateLog.getElementsByTagName('h4')[0];
-  autoUpdateLog.replaceChildren(logHead);//Clear the log
+  const direc = await getDirectory();//Query the user for the directory to monitor
+  if(!direc) return false;
+  sheetHandles.directory = direc;
+  Object.keys(sheetHandles.files).forEach((key)=>sheetHandles[key] = {handle:null,modified:0,errors:''});//Clear the preexisting handles.
+  sheetHandles.intervalID = 0;
+  const logs = $('#autoUpdateLog *:nth-child(2) ~ *');
+  logs.remove();
+  return true;
 }
 
 async function updateDirectory(){
-  await resetHandles();
-  startFilePoll();
+  const res = await resetHandles();
+  if(res){
+    startFilePoll();
+  }
 }
 
 async function findFiles(){
@@ -42,7 +54,7 @@ async function findFiles(){
     html:null,
     css:null
   }
-  for await (let handle of handles.directory.values()){
+  for await (let handle of sheetHandles.directory.values()){
     if(handle.kind === 'file'){
       const file = await handle.getFile();
       const text = await file.text();
@@ -52,9 +64,9 @@ async function findFiles(){
         try{
           JSON.parse(text);
           translationSpan.style['background-color'] = gtgColor;
-          handles.files.translation.errors = '';//The translation JSON is valid!
+          sheetHandles.files.translation.errors = '';//The translation JSON is valid!
         }catch(err){
-          handles.files.translation.errors = 'Invalid Translation JSON.';
+          sheetHandles.files.translation.errors = 'Invalid Translation JSON.';
           translationSpan.style['background-color'] = warningColor
         }
       }else if(handle.name.endsWith('.html')){
@@ -71,10 +83,10 @@ async function findFiles(){
           return memo;
         },{});
         const evilBytesMatch = evilCSSBytesRx.test(text);
-        handles.files.css.errors = [];
+        sheetHandles.files.css.errors = [];
         let backColor = gtgColor;
         if(evilBytesMatch){
-          handles.files.css.errors.push(`Suspect text found in CSS file. Review for low and/or high byte characters`);
+          sheetHandles.files.css.errors.push(`Suspect text found in CSS file. Review for low and/or high byte characters`);
           backColor = warningColor;
         }
         const problems = Object.entries(evilLogMatch)
@@ -85,10 +97,10 @@ async function findFiles(){
             return memo;
           },[]);
         if(problems.length){
-          handles.files.css.errors.push(`Suspect words found in CSS:\n${problems.join('\n')}`);
+          sheetHandles.files.css.errors.push(`Suspect words found in CSS:\n${problems.join('\n')}`);
           backColor = warningColor;
         }
-        handles.files.css.errors = handles.files.css.errors.join('\n');
+        sheetHandles.files.css.errors = sheetHandles.files.css.errors.join('\n');
         cssSelect.style['background-color'] = backColor;
       }
     }
@@ -100,29 +112,30 @@ async function findFiles(){
         document.getElementById(`${fileType}Select`);
       status.replaceChildren(fileType);
       status.style['background-color'] = warningColor;
-      if(handles.files[fileType].name){
-        updateLog(`removed ${handles.files[fileType].name}`);
+      if(sheetHandles.files[fileType].name){
+        updateLog(`removed ${sheetHandles.files[fileType].name}`);
       }
     }
     if(!handle){
-      handles.files[fileType].modified = 0;
+      sheetHandles.files[fileType].modified = 0;
     }
-    handles.files[fileType].name = handle ? handle.name : '';
-    handles.files[fileType].handle = handle;
+    sheetHandles.files[fileType].name = handle ? handle.name : '';
+    sheetHandles.files[fileType].handle = handle;
   });
   jsonErr.replaceChildren();
   let errorAction = 'hide';
   ['translation','html','css'].forEach((fileType)=>{
-    if(handles.files[fileType].errors){
+    if(sheetHandles.files[fileType].errors){
+      errorAction = 'show';
       const errSpan = document.createElement('span');
-      errSpan.append(handles.files[fileType].errors);
+      errSpan.append(sheetHandles.files[fileType].errors);
       jsonErr.append(errSpan);
     }
   });
-  autoDirectoryMonitorSpan.replaceChildren(`Monitoring ${handles.directory.name}`);
-  autoDirectoryMonitorSpan.style = `background-color:${gtgColor}`;
+  autoDirectoryMonitorSpan.replaceChildren(`Monitoring ${sheetHandles.directory.name}`);
+  monitorContainer.style = `background-color:${gtgColor}`;
   autoDirectoryButton.replaceChildren('Change Directory');
-  $('#sheetsandbox p.json-error')[errorAction]();
+  $('#jsonErr')[errorAction]();
 }
 
 function humanTime(){
@@ -138,11 +151,13 @@ function padTime(time){
 }
 
 function startFilePoll(){
-  if(handles.intervalID){
-    clearTimeout(handles.interval);
+  if(sheetHandles.intervalID){
+    cycles = 0;
+    clearTimeout(sheetHandles.intervalID);
   }
-  updateLog(`Began Monitoring ${handles.directory.name}`);
-  updateSheet('start');
+  sheetHandles.intervalStart = Date.now()
+  updateLog(`Began Monitoring ${sheetHandles.directory.name}`);
+  updateSheet('start',sheetHandles.intervalStart);
 }
 
 function updateLog(message){
@@ -156,20 +171,21 @@ function updateLog(message){
   }
 }
 
-async function updateSheet(start){
+async function updateSheet(start,timeSig){
+  if(timeSig !== sheetHandles.intervalStart) return;
   if(!cycles){
-    $('#autoDirectoryMonitorSpan').toggleClass('cycled');
+    $('#monitorScan').toggleClass('cycled');
   }
   cycles++;
   if(cycles > 3){
     cycles = 0;
   }
   await findFiles();
-  const filePromises = Object.entries(handles.files).map(async ([fileType,obj])=>{
+  const filePromises = Object.entries(sheetHandles.files).map(async ([fileType,obj])=>{
     if(typeof obj !== 'object' || !obj.handle) return;
     const file = await obj.handle.getFile();
-    if(file.lastModified > handles[fileType].modified){
-      handles[fileType].modified = file.lastModified;
+    if(file.lastModified > sheetHandles[fileType].modified){
+      sheetHandles[fileType].modified = file.lastModified;
       const transfer = new DataTransfer();
       transfer.items.add(file);
       const $input = $(`#sheetsandbox .container .btn.${fileType} input`);
@@ -180,17 +196,52 @@ async function updateSheet(start){
     }
   });
   await Promise.all(filePromises);
-  if(start || handles.intervalID){
-    handles.intervalID = setTimeout(updateSheet,1000);//Check files every second
+  if(timeSig === sheetHandles.intervalStart && (start || sheetHandles.intervalID)){
+    sheetHandles.intervalID = setTimeout(updateSheet,1000,undefined,timeSig);//Check files every second
   }
 }
 
 const getDirectory = ()=>{
   if(!window.showDirectoryPicker){
     alert('The autoUpdate extension is not compatible with your browser. Please try with a different browser. This extension is only supported in chromium browsers, although some like Brave have disabled the technology that it runs on.');
-    return;
+    return null;
   }
-  const verify = confirm('The Roll20 auto update extension will provide a directory interface. The extension will have access to all files in the directory that you select with the picker. You may also get a confirmation dialogue from your chromium browser as well. Do you want to continue?');
-  if(!verify) return 'File picker canceled.';
-  return window.showDirectoryPicker();
+  try{
+    return window.showDirectoryPicker();
+  }catch(err){
+    return null;
+  }
 };
+
+function createInterface(){
+  const logContainer = document.createElement('div');
+  logContainer.id = 'autoUpdateLog';
+  const logHead = document.createElement('h4');
+  logHead.replaceChildren('Update Log');
+  const jsonErr = document.createElement('div');
+  jsonErr.id = 'jsonErr';
+  $('#jsonErr').hide();
+  logContainer.replaceChildren(jsonErr,logHead);
+
+  const monitorContainer = document.createElement('div');
+  monitorContainer.id = 'monitorContainer';
+  monitorContainer.className = 'statusDisplay';
+  monitorContainer.style['background-color'] = '#b65050';
+  const monitorScan = document.createElement('div');
+  monitorScan.id = 'monitorScan';
+  const monitorSpan = document.getElementById('autoDirectoryMonitorSpan') ||
+    document.createElement('span');
+  monitorSpan.id = 'autoDirectoryMonitorSpan';
+  monitorSpan.append('No Directory Selected');
+  monitorContainer.append(monitorScan,monitorSpan);
+  
+  const buttonContainer = document.createElement('div');
+  const directoryButton = document.createElement('button');
+  directoryButton.id = 'autoDirectoryButton';
+  directoryButton.replaceChildren('Select Directory');
+  directoryButton.className = 'btn';
+  directoryButton.addEventListener('click',updateDirectory);
+  buttonContainer.replaceChildren(directoryButton);
+  buttonContainer.className = `${buttonContainer.className} autoButtonContainer`;
+  return [monitorContainer,logContainer,buttonContainer];
+}

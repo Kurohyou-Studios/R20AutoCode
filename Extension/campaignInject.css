@@ -3,30 +3,51 @@
   gap:0.5rem;
   justify-content: center;
 }
-
+#monitorContainer{
+  display:grid;
+  grid-template-areas:'content';
+  position:relative;
+  overflow:hidden;
+}
+#monitorContainer > *{
+  grid-area:content;
+}
 #autoDirectoryMonitorSpan{
   font-weight: bold;
   text-align: center;
-  display: block;
-  margin: 1rem;
-  transition:background-position 3000ms ease-in-out;
-  background-image:radial-gradient(circle closest-side, white, transparent);
-  background-position:-140px;
+}
+#monitorScan{
+  --breathe:17.5px;
+  --scanColor:#ffffffbf;
+  position:absolute;
+  transition:left 4300ms linear;
+  place-self:center start;
+  background-image:linear-gradient(90deg,transparent, var(--scanColor) 49%, var(--scanColor) 51%, transparent);/*radial-gradient(ellipse farthest-side, white, transparent);*/
   background-repeat:no-repeat;
+  height: 35px;
+  width:var(--breathe);
+  left:-17px;
 }
 
 .cycled{
-  background-position:140px !important;
+  left:100% !important;
 }
 
 #sheetsandbox{
   display:grid;
   gap:0.5rem;
+  grid-template-rows:repeat(4,auto) 1fr 5px repeat(2,auto);
+  max-height:calc(100vh - 90px);
+}
+#sheetsandbox hr{
+  margin-block: 0;
+  align-self: center;
 }
 
 #autoUpdateLog{
   display:grid;
   gap:0.5rem;
+  overflow-y:auto;
 }
 #autoUpdateLog h4{
   place-self:center;
@@ -35,14 +56,12 @@
   width:100%;
 }
 #statusContainer{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:0.5rem;
-  align-items:center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
 }
-#autoDirectoryMonitorSpan,
-#statusContainer > *{
-  width:100%;
+.statusDisplay{
   margin:0;
   padding:4px;
   border: 1px solid var(--dark-secondarytext);
@@ -50,4 +69,5 @@
   appearance: none;
   text-align: center;
   box-sizing:border-box;
+  flex:1;
 }
