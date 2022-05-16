@@ -14,9 +14,20 @@
   const style = document.getElementById('autoUploadStyle') || document.createElement('link');
   style.id = `autoUploadStyle`;
   script.src = chrome.runtime.getURL('campaignInject.js');
+  body.append(script);
 
   style.rel = 'stylesheet';
   style.href = chrome.runtime.getURL('campaignInject.css');
-  body.append(script);
   head.append(style);
+  
+  const url = window.location.href;
+  const injectJS = document.createElement('script');
+  if(/editor/.test(url) && sheetsandbox){
+    //Sheet sandbox detected
+    injectJS.src = chrome.runtime.getURL('sheetDialog.js');
+  }else if(/scripts/.test(url)){
+    //Api scripts page detected
+    injectJS.src = chrome.runtime.getURL('apiDialog.js');
+  }
+  body.append(injectJS);
 })();
