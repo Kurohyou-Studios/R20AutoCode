@@ -8,15 +8,6 @@
     "48": "48icon.png",
     "128": "128icon.png"
   },
-  "background":{
-    "service_worker":"background.js"
-  },
-  "permissions":["declarativeContent"],
-  "host_permissions":["*://*.roll20.net/*","*://*.roll20staging.net/*"],
-  "action":{
-    "default_title":"R20 Autouploader",
-    "default_popup":"popup.html"
-  },
   "content_scripts":[
     {
       "matches":["*://app.roll20.net/editor/","*://app.roll20staging.net/editor/"],
