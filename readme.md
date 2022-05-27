@@ -5,7 +5,7 @@ This extension is for chromium browsers. It should work on all chromium browsers
 ## Installing the Extension
 In order to install the extension, you will need to use a chromium browser (Chrome, Edge, etc).
 
-1. Download the `Extension` directory from the repositor. Save this where you can find it on your computer. You may rename the directory if you want, but do NOT rename any of the contained files.
+1. Download the `Extension` directory from the repository. Save this where you can find it on your computer. You may rename the directory if you want, but do NOT rename any of the contained files.
 2. In your chromium browser, navigate to `chrome://extensions`. This will bring up a page listing your installed extensions.
 3. On this page will be an option to "Enable Developer Mode". Toggle Developer mode on if it is not already.
 4. This will display several additional options, one of which is to "Load unpacked". Click this and navigate to the directory where you have saved the `extension` directory. Select the `extension` directory and click `Select Folder`. The extension is now installed.
@@ -44,7 +44,11 @@ This is the original Roll20 button for this and works as described in the wiki.
 ## Data Privacy
 The extension does not store any data collected from your computer between sessions. Once you close your browser, the extension loses all memory of what you did while it was running. The only place that the extension shares the data it collects while running is with the Roll20 site itself. It also only shares the specific files needed to update the Roll20 page. For the sheet sandbox, this is the html, css, and translation.json files indicated in the log.
 ## Changelog
-## v1.00
+### v1.01
+- Extension now allows selecting from multiple files in a folder and supports switching to language specific translation files in a `translations` subfolder
+- Removed the robot eye that showed the extension was functioning.
+- Added error detection functionality that changes the color of the "monitoring" field if the extension crashes or the internet connection is lost. The update log will also get an entry if an error is detected.
+### v1.00
 - Fixed display error with long file names
 - Changed scanning animation to be smoother
 - Update Manifest Permissions to be accurate to what the extension actually uses (only `declarativeContent`)
