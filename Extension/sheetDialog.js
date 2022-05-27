@@ -1,3 +1,23 @@
+function createSelect(type){
+  const select = document.createElement('select');
+  select.id = `${type}Select`;
+  select.style['background-color'] = '#b65050';
+  select.className = 'statusDisplay';
+  select.addEventListener('change',changeFile);
+  const option = createCodeOption(type.toUpperCase())
+  select.append(option);
+  select.value = type.toUpperCase();
+  select.disabled = true;
+  return select;
+}
+
+function createCodeOption(value,text){
+  const option = document.createElement('option');
+  option.value = value;
+  option.append(text || value);
+  return option;
+}
+
 (async function (){
   await new Promise(resolve =>{//Delay to ensure extension resource are loaded
     setTimeout(()=>{
@@ -5,9 +25,11 @@
     },200);
   });
   console.log('Sheet Dialog injected');
+  
   const dialogContainer = sheetsandbox.parentElement;
   dialogContainer.style['max-height'] = '100%';
   dialogContainer.overflow = 'auto';
+
   const R20ButtonContainer = sheetsandbox.getElementsByClassName('container')[0];
   $('#sheetsandbox .container').hide();
   const jsonErr = sheetsandbox.getElementsByClassName('json-error')[0];
@@ -15,22 +37,14 @@
 
   const statusContainer = document.createElement('div');
   statusContainer.id = 'statusContainer';
-  const htmlSelect = document.createElement('span');
-  htmlSelect.id = 'htmlSelect';
-  htmlSelect.style['background-color'] = '#b65050';
-  htmlSelect.className = 'statusDisplay';
-  htmlSelect.append('HTML');
-  const cssSelect = document.createElement('span');
-  cssSelect.id = 'cssSelect';
-  cssSelect.style['background-color'] = '#b65050';
-  cssSelect.className = 'statusDisplay';
-  cssSelect.append('CSS');
-  const translationSpan = document.createElement('span');
-  translationSpan.id = 'translationSpan';
-  translationSpan.style['background-color'] = '#b65050';
-  translationSpan.className = 'statusDisplay';
-  translationSpan.append('Translation');
-  statusContainer.append(htmlSelect,cssSelect,translationSpan);
+
+  const htmlSelect = createSelect('html');
+
+  const cssSelect = createSelect('css');
+
+  const translationSelect = createSelect('translation');
+
+  statusContainer.append(htmlSelect,cssSelect,translationSelect);
   sheetsandbox.insertBefore(statusContainer,jsonErr);
 
   const instructionP = sheetsandbox.getElementsByTagName('p')[0];
@@ -42,3 +56,55 @@
   sheetsandbox.insertBefore(monitorContainer,R20ButtonContainer);
   sheetsandbox.insertBefore(buttonContainer,R20ButtonContainer);
 })();
+
+function createInterface(){
+  const logContainer = document.createElement('div');
+  logContainer.id = 'autoUpdateLog';
+
+  const logHead = document.createElement('h4');
+  logHead.replaceChildren('Update Log');
+
+  const jsonErr = document.createElement('div');
+  jsonErr.id = 'jsonErr';
+  logContainer.replaceChildren(jsonErr,logHead);
+
+  const monitorContainer = document.createElement('div');
+  monitorContainer.id = 'monitorContainer';
+  monitorContainer.className = 'statusDisplay';
+  monitorContainer.style['background-color'] = '#b65050';
+
+  const monitorSpan = document.createElement('span');
+  monitorSpan.id = 'autoDirectoryMonitorSpan';
+  monitorSpan.append('No Directory Selected');
+
+  monitorContainer.append(monitorSpan);
+
+  const directoryButton = document.createElement('button');
+  directoryButton.id = 'autoDirectoryButton';
+  directoryButton.replaceChildren('drive_folder_upload');
+  directoryButton.className = 'btn material-icons';
+  directoryButton.title = 'Select directory';
+  directoryButton.addEventListener('click',updateDirectory);
+
+  const playButton = document.createElement('button');
+  playButton.id = 'playButton';
+  playButton.className = 'pause material-icons btn';
+  playButton.disabled = true;
+  playButton.append('sync');
+  playButton.title = 'Pause sync';
+  playButton.addEventListener('click',toggleMonitor);
+
+  const refreshButton = document.createElement('button');
+  refreshButton.id = 'refreshButton';
+  refreshButton.className = 'material-icons btn';
+  refreshButton.disabled = true;
+  refreshButton.append('replay');
+  refreshButton.title = 'Refresh code';
+  refreshButton.addEventListener('click',reloadDirectory);
+
+  const buttonContainer = document.createElement('div');
+  buttonContainer.replaceChildren(playButton,directoryButton,refreshButton);
+  buttonContainer.className = `${buttonContainer.className} autoButtonContainer`;
+
+  return [monitorContainer,logContainer,buttonContainer];
+}
