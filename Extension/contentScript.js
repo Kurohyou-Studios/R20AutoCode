@@ -9,16 +9,22 @@
 (function(){
   const body = document.getElementsByTagName('body')[0];
   const head = document.getElementsByTagName('head')[0];
-  const script = document.getElementById('autoUploadScript') || document.createElement('script');
+  const script = document.createElement('script');
   script.id = `autoUploadScript`;
-  const style = document.getElementById('autoUploadStyle') || document.createElement('link');
-  style.id = `autoUploadStyle`;
   script.src = chrome.runtime.getURL('campaignInject.js');
   body.append(script);
-
+  
+  const style = document.createElement('link');
+  style.id = `autoUploadStyle`;
   style.rel = 'stylesheet';
   style.href = chrome.runtime.getURL('campaignInject.css');
   head.append(style);
+
+  const iconLink = document.createElement('link');
+  iconLink.rel = 'stylesheet';
+  iconLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
+  head.append(iconLink);
+
   
   const url = window.location.href;
   const injectJS = document.createElement('script');

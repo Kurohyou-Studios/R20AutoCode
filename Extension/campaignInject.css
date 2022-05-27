@@ -1,7 +1,35 @@
+@import url("https://fonts.googleapis.com/css?family=Material+Icons&display=swap");
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+button[disabled]{
+  display:none;
+}
 .autoButtonContainer{
   display:flex;
   gap:0.5rem;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 #monitorContainer{
   display:grid;
@@ -17,6 +45,7 @@
   text-align: center;
 }
 #monitorScan{
+  display:none;
   --breathe:17.5px;
   --scanColor:#ffffffbf;
   position:absolute;
@@ -27,6 +56,12 @@
   height: 35px;
   width:var(--breathe);
   left:-17px;
+}
+select{
+  opacity:1;
+}
+.paused{
+  opacity:0;
 }
 
 .cycled{
@@ -64,10 +99,15 @@
 .statusDisplay{
   margin:0;
   padding:4px;
-  border: 1px solid var(--dark-secondarytext);
+  border: 1px solid var(--dark-secondarytext)!important;
   border-radius: 8px;
-  appearance: none;
   text-align: center;
   box-sizing:border-box;
   flex:1;
+  color:#e6e6e6;
+  font-weight:700;
+}
+.statusDisplay[disabled]{
+  appearance:none;
+  cursor:initial;
 }
