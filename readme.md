@@ -46,6 +46,8 @@ The extension does not store any data collected from your computer between sessi
 ## Changelog
 ### v1.01
 - Extension now allows selecting from multiple files in a folder and supports switching to language specific translation files in a `translations` subfolder
+- Ability to pause monitoring
+- Ability to force a reload of all files
 - Removed the robot eye that showed the extension was functioning.
 - Added error detection functionality that changes the color of the "monitoring" field if the extension crashes or the internet connection is lost. The update log will also get an entry if an error is detected.
 ### v1.00
