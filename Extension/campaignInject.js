@@ -29,6 +29,10 @@ const evilCSSBytes = [
 ];
 const evilCSSBytesRx = new RegExp(evilCSSBytes.join('|'));
 
+function updateInterface(){
+  playButton.replaceChildren('sync_disabled');
+}
+
 const resetHandles = async ()=>{
   const direc = await getDirectory();//Query the user for the directory to monitor
   if(!direc) return false;
@@ -40,14 +44,6 @@ const resetHandles = async ()=>{
   playButton.disabled = false;
   refreshButton.disabled = false;
   return true;
-}
-
-async function updateDirectory(){
-  const res = await resetHandles();
-  playButton.replaceChildren('sync_disabled');
-  if(res){
-    startFilePoll();
-  }
 }
 
 async function findFiles(){
@@ -188,18 +184,6 @@ function updateTrackedHandles(foundFiles){
   });
 }
 
-function humanTime(){
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-  return `${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`;
-}
-
-function padTime(time){
-  return `${time}`.replace(/^\d$/,'0$&');
-}
-
 function startFilePoll(message){
   if(sheetHandles.intervalID){
     clearTimeout(sheetHandles.intervalID);
@@ -207,17 +191,6 @@ function startFilePoll(message){
   sheetHandles.intervalStart = Date.now();
   updateLog(message || `Began Monitoring ${sheetHandles.directory.name}`);
   updateSheet('start',sheetHandles.intervalStart);
-}
-
-function updateLog(message){
-  const logSpan = document.createElement('span');
-  logSpan.append(`${humanTime()} - ${message}`);
-  const lastEntry = autoUpdateLog.getElementsByTagName('h4')[0].nextSibling;
-  if(lastEntry){
-    autoUpdateLog.insertBefore(logSpan,lastEntry);
-  }else{
-    autoUpdateLog.append(logSpan);
-  }
 }
 
 async function updateSheet(start,timeSig){
@@ -251,23 +224,6 @@ async function updateSheet(start,timeSig){
     sheetHandles.intervalID = setTimeout(updateSheet,1000,undefined,timeSig);//Check files every second
   }
 }
-
-function heartbeat(){
-  monitorContainer.style['background-color'] = warningColor;
-  updateLog('Extension error or connection issue detected');
-}
-
-const getDirectory = ()=>{
-  if(!window.showDirectoryPicker){
-    alert('The autoUpdate extension is not compatible with your browser. Please try with a different browser. This extension is only supported in chromium browsers, although some like Brave have disabled the technology that it runs on.');
-    return null;
-  }
-  try{
-    return window.showDirectoryPicker();
-  }catch(err){
-    return null;
-  }
-};
 
 function toggleMonitor(){
   if(sheetHandles.intervalID){

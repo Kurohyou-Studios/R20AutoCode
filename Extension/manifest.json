@@ -10,13 +10,17 @@
   },
   "content_scripts":[
     {
-      "matches":["*://app.roll20.net/editor/","*://app.roll20staging.net/editor/"],
+      "matches":["*://app.roll20.net/editor/","*://app.roll20staging.net/editor/","*://app.roll20.net/campaigns/scripts*","*://app.roll20staging.net/campaigns/scripts*"],
       "js":["contentScript.js"]
     }
   ],
   "web_accessible_resources":[
     {
-      "resources":["campaignInject.js","campaignInject.css","apiInject.js","interface.css","sheetDialog.js"],
+      "resources":[
+        "interface.css","AutocodeGeneric.js",
+        "campaignInject.js","campaignInject.css","sheetDialog.js",
+        "apiDialog.js","apiInject.css","apiInject.js"
+      ],
       "matches":["*://*.roll20.net/*","*://*.roll20staging.net/*"]
     }
   ]
