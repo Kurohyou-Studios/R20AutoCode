@@ -44,6 +44,8 @@ This is the original Roll20 button for this and works as described in the wiki.
 ## Data Privacy
 The extension does not store any data collected from your computer between sessions. Once you close your browser, the extension loses all memory of what you did while it was running. The only place that the extension shares the data it collects while running is with the Roll20 site itself. It also only shares the specific files needed to update the Roll20 page. For the sheet sandbox, this is the html, css, and translation.json files indicated in the log.
 ## Changelog
+### v1.2alpha
+- Alpha release of API code auto upload
 ### v1.01
 - Extension now allows selecting from multiple files in a folder and supports switching to language specific translation files in a `translations` subfolder
 - Ability to pause monitoring
