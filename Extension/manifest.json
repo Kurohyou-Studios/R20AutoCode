@@ -1,7 +1,7 @@
 {
   "name": "Roll20 API and Sheet Autouploader",
   "description": "An extension to automate the uploading of new API and custom sheet code to the API and sheet sandbox.",
-  "version": "1.2alpha",
+  "version": "1.2",
   "manifest_version": 3,
   "icons": {
     "32": "32icon.png",

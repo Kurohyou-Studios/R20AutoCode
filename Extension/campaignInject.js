@@ -1,7 +1,3 @@
-//Colors for display
-const warningColor = '#eddf67';
-const gtgColor = '#448744';
-
 //Object to hold the directory and file handles
 const sheetHandles = {
   directory:null,

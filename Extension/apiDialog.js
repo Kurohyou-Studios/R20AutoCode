@@ -15,7 +15,9 @@ const apiHandles = {
   }
 };
 
-(function() {
+const body = document.getElementsByTagName('body')[0];
+body.addEventListener('autoBuilt',()=>{
+  console.log('building dialog');
   const $buttonContainer = $('<div>').css({display:'flex',gap:'0.5rem','justify-content':'center'});
   const $playButton = $(`<button class="requires-directory material-icons btn btn-primary" disabled>sync_disabled</button>`);
   $playButton.prop({title:'Pause sync',id:'playButton'});
@@ -83,4 +85,4 @@ const apiHandles = {
       uploadScriptDialog(scriptName,scriptID);
     }
   });
-})();
+});

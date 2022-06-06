@@ -18,13 +18,9 @@ function createCodeOption(value,text){
   return option;
 }
 
-(async function (){
-  await new Promise(resolve =>{//Delay to ensure extension resource are loaded
-    setTimeout(()=>{
-      resolve(true);
-    },200);
-  });
-  console.log('Sheet Dialog injected');
+const body = document.getElementsByTagName('body')[0];
+body.addEventListener('autoBuilt',async ()=>{
+  console.log('Injecting sheet dialog');
   
   const dialogContainer = sheetsandbox.parentElement;
   dialogContainer.style['max-height'] = '100%';
@@ -55,7 +51,10 @@ function createCodeOption(value,text){
   sheetsandbox.insertBefore(logContainer,jsonHR);
   sheetsandbox.insertBefore(monitorContainer,R20ButtonContainer);
   sheetsandbox.insertBefore(buttonContainer,R20ButtonContainer);
-})();
+});
+
+async function createDialog(){
+}
 
 function createInterface(){
   const logContainer = document.createElement('div');

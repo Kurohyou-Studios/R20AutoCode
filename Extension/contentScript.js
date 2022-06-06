@@ -30,7 +30,6 @@
   iconLink.rel = 'stylesheet';
   iconLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
 
-  
   const url = window.location.href;
   const injectJS = document.createElement('script');
   if(/editor/.test(url) && sheetsandbox){
@@ -48,4 +47,11 @@
   head.append(style);
   head.append(iconLink);
   body.append(injectJS);
+  console.log('scripts injected');
+  setTimeout(()=>{
+    const loadEvent = new CustomEvent('autoBuilt');
+    console.log('loadEvent',loadEvent);
+    body.dispatchEvent(loadEvent);
+    console.log('event dispatched');
+  },500,body)
 })();
