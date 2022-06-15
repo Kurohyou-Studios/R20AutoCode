@@ -386,3 +386,15 @@ function styleScriptHeader({id,warning,active,inactive}){
       warningColor :
       gtgColor;
 }
+
+(()=>{
+  const worker = ()=>{
+    if(typeof buildUI !== 'undefined'){
+      buildUI();
+    }else{
+      console.log('functions missing');
+      setTimeout(()=>worker(),100);
+    }
+  };
+  worker();
+})();

@@ -260,3 +260,14 @@ async function changeFile(){
   sheetHandles.files[fileType].modified = 0;
   startFilePoll(`Switched ${fileType} to ${fileHandle.name}`);
 }
+
+(()=>{
+  const worker = ()=>{
+    if(typeof buildUI !== 'undefined'){
+      buildUI();
+    }else{
+      setTimeout(()=>worker(),100);
+    }
+  };
+  worker();
+})();
