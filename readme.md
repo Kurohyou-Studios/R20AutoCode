@@ -189,11 +189,23 @@ Thank you to all the Roll20 community that inspired this extensions. Particularl
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Changelog
-### v1.21Alpha
+### v1.21alpha
 - Updated readme to reflect the features of the API upload
+- Improved stylig of the readme
 - Fixed a fragile section of the code that could cause a crash on page load.
-## v1.2alpha
+### v1.2alpha
 - Alpha release of API code auto upload
+### v1.01
+- Extension now allows selecting from multiple files in a folder and supports switching to language specific translation files in a `translations` subfolder
+- Ability to pause monitoring
+- Ability to force a reload of all files
+- Removed the robot eye that showed the extension was functioning.
+- Added error detection functionality that changes the color of the "monitoring" field if the extension crashes or the internet connection is lost. The update log will also get an entry if an error is detected.
+### v1.00
+- Fixed display error with long file names
+- Changed scanning animation to be smoother
+- Update Manifest Permissions to be accurate to what the extension actually uses (only `declarativeContent`)
+- The extension no longer requires clicking on the extension's button in the extension tray
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 <!-- MARKDOWN LINKS & IMAGES -->
