@@ -187,6 +187,15 @@ Thank you to all the Roll20 community that inspired this extensions. Particularl
 - [Keith](https://github.com/keithcurtis1) For Testing and design feedback
 - [Andreas](https://github.com/Anduh) For Testing and design feedback
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+## Changelog
+### v1.21Alpha
+- Updated readme to reflect the features of the API upload
+- Fixed a fragile section of the code that could cause a crash on page load.
+## v1.2alpha
+- Alpha release of API code auto upload
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
