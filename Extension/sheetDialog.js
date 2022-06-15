@@ -18,44 +18,8 @@ function createCodeOption(value,text){
   return option;
 }
 
-(async function (){
-  await new Promise(resolve =>{//Delay to ensure extension resource are loaded
-    setTimeout(()=>{
-      resolve(true);
-    },200);
-  });
-  console.log('Sheet Dialog injected');
-  
-  const dialogContainer = sheetsandbox.parentElement;
-  dialogContainer.style['max-height'] = '100%';
-  dialogContainer.overflow = 'auto';
-
-  const R20ButtonContainer = sheetsandbox.getElementsByClassName('container')[0];
-  $('#sheetsandbox .container').hide();
-  const jsonErr = sheetsandbox.getElementsByClassName('json-error')[0];
-  const jsonHR = jsonErr.nextSibling;
-
-  const statusContainer = document.createElement('div');
-  statusContainer.id = 'statusContainer';
-
-  const htmlSelect = createSelect('html');
-
-  const cssSelect = createSelect('css');
-
-  const translationSelect = createSelect('translation');
-
-  statusContainer.append(htmlSelect,cssSelect,translationSelect);
-  sheetsandbox.insertBefore(statusContainer,jsonErr);
-
-  const instructionP = sheetsandbox.getElementsByTagName('p')[0];
-  instructionP.replaceChildren('Use the buttons below to change which directory the game pulls the character sheet from and to reload the character sheet code. Errors found in the code will be noted below the buttons.');
-  
-  const [monitorContainer,logContainer,buttonContainer] = createInterface();
-
-  sheetsandbox.insertBefore(logContainer,jsonHR);
-  sheetsandbox.insertBefore(monitorContainer,R20ButtonContainer);
-  sheetsandbox.insertBefore(buttonContainer,R20ButtonContainer);
-})();
+async function createDialog(){
+}
 
 function createInterface(){
   const logContainer = document.createElement('div');
@@ -107,4 +71,38 @@ function createInterface(){
   buttonContainer.className = `${buttonContainer.className} autoButtonContainer`;
 
   return [monitorContainer,logContainer,buttonContainer];
+}
+
+function buildUI(){
+  console.log('Injecting sheet dialog');
+  
+  const dialogContainer = sheetsandbox.parentElement;
+  dialogContainer.style['max-height'] = '100%';
+  dialogContainer.overflow = 'auto';
+
+  const R20ButtonContainer = sheetsandbox.getElementsByClassName('container')[0];
+  $('#sheetsandbox .container').hide();
+  const jsonErr = sheetsandbox.getElementsByClassName('json-error')[0];
+  const jsonHR = jsonErr.nextSibling;
+
+  const statusContainer = document.createElement('div');
+  statusContainer.id = 'statusContainer';
+
+  const htmlSelect = createSelect('html');
+
+  const cssSelect = createSelect('css');
+
+  const translationSelect = createSelect('translation');
+
+  statusContainer.append(htmlSelect,cssSelect,translationSelect);
+  sheetsandbox.insertBefore(statusContainer,jsonErr);
+
+  const instructionP = sheetsandbox.getElementsByTagName('p')[0];
+  instructionP.replaceChildren('Use the buttons below to change which directory the game pulls the character sheet from and to reload the character sheet code. Errors found in the code will be noted below the buttons.');
+  
+  const [monitorContainer,logContainer,buttonContainer] = createInterface();
+
+  sheetsandbox.insertBefore(logContainer,jsonHR);
+  sheetsandbox.insertBefore(monitorContainer,R20ButtonContainer);
+  sheetsandbox.insertBefore(buttonContainer,R20ButtonContainer);
 }

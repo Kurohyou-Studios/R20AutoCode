@@ -1,7 +1,7 @@
 {
   "name": "Roll20 API and Sheet Autouploader",
   "description": "An extension to automate the uploading of new API and custom sheet code to the API and sheet sandbox.",
-  "version": "1.01",
+  "version": "1.2",
   "manifest_version": 3,
   "icons": {
     "32": "32icon.png",
@@ -10,13 +10,17 @@
   },
   "content_scripts":[
     {
-      "matches":["*://app.roll20.net/editor/","*://app.roll20staging.net/editor/"],
+      "matches":["*://app.roll20.net/editor/","*://app.roll20staging.net/editor/","*://app.roll20.net/campaigns/scripts*","*://app.roll20staging.net/campaigns/scripts*"],
       "js":["contentScript.js"]
     }
   ],
   "web_accessible_resources":[
     {
-      "resources":["campaignInject.js","campaignInject.css","apiInject.js","interface.css","sheetDialog.js"],
+      "resources":[
+        "interface.css","AutocodeGeneric.js",
+        "campaignInject.js","campaignInject.css","sheetDialog.js",
+        "apiDialog.js","apiInject.css","apiInject.js"
+      ],
       "matches":["*://*.roll20.net/*","*://*.roll20staging.net/*"]
     }
   ]
