@@ -51,9 +51,11 @@ This Chromium extension will automate the uploading of code to your Roll20 sheet
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
-<video autoplay>
-  <source src="Demo/Annotated R20 Upload Video mk 2.mp4">
-</video>
+<span align="center">
+
+[![Product Name Screen Shot][product-screenshot]][product-screenshot]
+
+</span>
 
 Back when the sheet sandbox was first released, I had asked Kenton why the sheet sandbox couldn't simply monitor a directory and automatically update the sandbox when the html, css, or translation.json files changed. Back then, this wasn't possible as browsers don't generally have live access to the file system of a user's computer. That changes today with the release of v1.0 of the Roll20 API and Sheet Autouploader! You can also find the source code on github.
 
@@ -65,6 +67,7 @@ v1.21Alpha of the autouploader also works on API scripts!
 - CSS
 - JS
 - JQuery
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 <!-- GETTING STARTED -->
 
