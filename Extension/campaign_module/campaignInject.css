@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css?family=Material+Icons&display=swap");
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+button[disabled]{
+  display:none;
+}
+.autoButtonContainer{
+  display:flex;
+  gap:0.5rem;
+  justify-content: space-evenly;
+}
+#monitorContainer{
+  display:grid;
+  grid-template-areas:'content';
+  position:relative;
+  overflow:hidden;
+}
+#monitorContainer > *{
+  grid-area:content;
+}
+#autoDirectoryMonitorSpan{
+  font-weight: bold;
+  text-align: center;
+}
+#monitorScan{
+  display:none;
+  --breathe:17.5px;
+  --scanColor:#ffffffbf;
+  position:absolute;
+  transition:left 4300ms linear;
+  place-self:center start;
+  background-image:linear-gradient(90deg,transparent, var(--scanColor) 49%, var(--scanColor) 51%, transparent);/*radial-gradient(ellipse farthest-side, white, transparent);*/
+  background-repeat:no-repeat;
+  height: 35px;
+  width:var(--breathe);
+  left:-17px;
+}
+select{
+  opacity:1;
+}
+.paused{
+  opacity:0;
+}
+
+.cycled{
+  left:100% !important;
+}
+
+#sheetsandbox{
+  display:grid;
+  gap:0.5rem;
+  grid-template-rows:repeat(4,auto) 1fr 5px repeat(2,auto);
+  grid-template-columns:1fr 0px;
+  grid-auto-flow: column;
+  max-height:calc(100vh - 90px);
+  transition:grid-template-columns 1s;
+  overflow:hidden;
+}
+#sheetsandbox hr{
+  margin-block: 0;
+  align-self: center;
+}
+
+#autoUpdateLog{
+  display:grid;
+  gap:0.5rem;
+  overflow-y:auto;
+  align-content:start;
+}
+#autoUpdateLog h4{
+  place-self:center;
+}
+#sheetsandbox hr{
+  width:100%;
+}
+#statusContainer{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.statusDisplay{
+  margin:0;
+  padding:4px;
+  border: 1px solid var(--dark-secondarytext)!important;
+  border-radius: 8px;
+  text-align: center;
+  box-sizing:border-box;
+  flex:1;
+  color:#e6e6e6;
+  font-weight:700;
+}
+.statusDisplay[disabled]{
+  appearance:none;
+  cursor:initial;
+}
+#mocha{
+  overflow-y:auto;
+  margin:0;
+}
+#mocha :is(h1){
+  font-size: 25px;
+}
+#mocha :is(h1) a{
+  pointer-events: none;
+}
+
+#mocha .test:is(.pass,.fail),
+#mocha .test:is(.pass,.fail):before,
+#mocha :is(h2){
+  font-size:16px;
+}
+#mocha .test:is(.pass,.fail):before{
+  font-weight: bold;
+}
+#mocha .replay{
+  display:none !important;
+}
+
+#mocha-stats{
+  inset: auto auto 15px 10px;
+  background-color: var(--dark-surface1,white);
+  padding: 0.5rem !important;
+  border-radius: 10px;
+  box-shadow: 0px 5px 20px #000;
+}
+
+#mocha-stats *{
+  color:var(--dark-primarytext) !important;
+}

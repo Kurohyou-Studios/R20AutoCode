@@ -1,25 +1,24 @@
 {
   "name": "Roll20 API and Sheet Autouploader",
   "description": "An extension to automate the uploading of new API and custom sheet code to the API and sheet sandbox.",
-  "version": "1.2",
+  "version": "1.3",
   "manifest_version": 3,
   "icons": {
-    "32": "32icon.png",
-    "48": "48icon.png",
-    "128": "128icon.png"
+    "32": "/assets/images/32icon.png",
+    "48": "/assets/images/48icon.png",
+    "128": "/assets/images/128icon.png"
   },
   "content_scripts":[
     {
       "matches":["*://app.roll20.net/editor/","*://app.roll20staging.net/editor/","*://app.roll20.net/campaigns/scripts*","*://app.roll20staging.net/campaigns/scripts*"],
-      "js":["contentScript.js"]
+      "js":["/generic_code/contentScript.js"]
     }
   ],
   "web_accessible_resources":[
     {
       "resources":[
-        "interface.css","AutocodeGeneric.js",
-        "campaignInject.js","campaignInject.css","sheetDialog.js",
-        "apiDialog.js","apiInject.css","apiInject.js"
+        "/generic_code/interface.css","/generic_code/AutocodeGeneric.js","/test_framework/mocha10.css","/test_framework/mocha10.js","/test_framework/chai.js",
+        "/campaign_module/campaignInject.js","/campaign_module/campaignInject.css","/campaign_module/sheetDialog.js","/campaign_module/mock20Sheetworkers.js"
       ],
       "matches":["*://*.roll20.net/*","*://*.roll20staging.net/*"]
     }
