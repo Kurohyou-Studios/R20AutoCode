@@ -188,12 +188,21 @@ const runTests = async function(file){
   lookForFailures();
 };
 
-const lookForFailures = ()=>{
+/**
+ * 
+ * @param {string} prevDur - The previous duration content
+ */
+const lookForFailures = (prevDur)=>{
   const fails = $('.fail.test');
-  if(fails[0]){
-    fails[0].scrollIntoView({behavior:'smooth'});
-  }else{
-    failureSearchID = setTimeout(lookForFailures,200);
+  fails.css({order:'1'});
+  console.log('fails',fails);
+  const parents = fails.parents('.suite');
+  parents.css({order:'1'});
+  console.log('parents',parents);
+  const currentDur = $('#mocha-stats .duration em').text();
+  console.log('=== Duration ===\nprevious:',prevDur,'\ncurrent:',currentDur);
+  if(prevDur !== currentDur){
+    failureSearchID = setTimeout(lookForFailures,200,currentDur);
   }
 }
 

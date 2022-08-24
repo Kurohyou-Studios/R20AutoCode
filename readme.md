@@ -93,6 +93,16 @@ In order to install the extension, you will need to use a chromium browser (Chro
 <!-- USAGE EXAMPLES -->
 
 ## Usage
+<details>
+<summary>Usage Instructions</summary>
+
+- [Syncing Sheet Files](#syncing-sheet-files)
+- [Syncing API Files](#syncing-api-files)
+- [Sheet Sandbox Extension Interfaces](#sheet-sandbox-extension-interfaces)
+- [API Sandbox Extension Interfaces](#api-sandbox-extension-interfaces)
+
+</details>
+
 Once the extension is enabled in your sandbox, follow these steps to begin monitoring your code:
 ### Syncing sheet files
 1. Click the `Select Directory` button in the modified sandbox tools container. It is the button with the folder icon with an up arrow in it. A dialogue will appear asking you to select a directory to monitor. Make sure to select the directory that your HTML, CSS, and translation.json files are directly in (e.g. they are not in sub folders within the folder you select)
@@ -121,6 +131,7 @@ Once the extension is enabled in your sandbox, follow these steps to begin monit
 ### Sheet Sandbox Extension Interfaces
 #### The Sheet Sandbox Monitor Status Panel
 The extension modifies the normal Sheet Sandbox Tools dialog in your game to relay additional information.
+
 ##### Monitor Status bar
 This bar will update based on which directory on your computer you are monitoring. After monitoring has begun it has an animated scan bar that will continue to animate back and forth across the bar as long as the extension is running properly. If this animation stops, then the extension has crashed.
 ##### Select/Change Directory Button
@@ -140,6 +151,29 @@ There's really only one error on `translation.json` files that gets reported in 
 This section will update with timestamped details about what updates the extension has made. This makes it easy to see when you last updated a specific file and to ensure that the extension is properly monitoring your files.
 ##### Sheet Default Settings Button
 This is the original Roll20 button for this and works as described in the wiki.
+
+#### Test Driven Design Environment
+
+As of v1.3, the extension provides an environment to run tests on your javascript code. This uses the [Mocha framework](https://mochajs.org/) with the [Chai assertion library](https://www.chaijs.com/). Both the `expect()` and `.should` chai syntaxes are supported.
+
+##### Mock Sheetworkers
+
+The extension provides mock sheetworkers for all sheetworkers listed on the Roll20 sheetworkers wiki page. The syntax to use these sheetworkers is the exact same as the actual sheetworkers, but they are run synchronously using a basic object as a representation of the character state instead of the actual firebase database that Roll20 uses.
+
+The mock versions of several sheetWorkers are simply empty shells at the moment. These include `setSectionOrder()`, `setDefaultToken()`, `startRoll()`, and `finishRoll()`;
+
+##### TDD specific functions and objects
+
+- Objects
+    - **sheetState:** Object that represents the character that tests are being run on. Keys are attribute names. Values are attribute values.
+    - **listeners:** Object representing all the listeners that should have been created. Populated by using the mock `on()` function.
+    - **sheetHTML:** Stores the HTML representation of the character sheet. Used by the extension to populate the default values of the character on page load. Note that this html is not manipulated to add the Roll20 specific pieces like the `.repcontainer` divs for repeating sections.
+- Functions
+  - **resetSheetState():** Resets the object representing the sheet state to it's empty value. Avoid using unless absolutely necessary.
+  - **resetSheet():** A less destructive version of `resetSheetState()`. This resets the sheet's state to the defaults specified in the sheet's html.
+  - **resetListeners():** Clears the record of what listeners have been registered.
+  - **parseRepeatName():** Extracts the section (e.g. `repeating_equipment`), rowID (e.g `-;lkj098J:LKj`), and field name (e.g. `bulk`) from a repeating attribute name.
+  - **trigger():** Function to pseudo trigger sheetworker listeners. Takes an event object as described in the [Roll20 wiki](https://wiki.roll20.net/Sheet_Worker_Scripts#Events).
 
 ### API Sandbox Extension Interfaces
 #### Directory Controls
@@ -191,6 +225,10 @@ Thank you to all the Roll20 community that inspired this extensions. Particularl
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Changelog
+### v1.3
+- Code organization; the code for the various modules is now in module specific folders.
+- TDD Framework; v1.3 adds a mock up of the Roll20 sheetworkers to allow for TDD development using Mocha and Chai.
+    - Both the `expect()` and `.should` syntaxes are supported.
 ### v1.21alpha
 - Updated readme to reflect the features of the API upload
 - Improved stylig of the readme

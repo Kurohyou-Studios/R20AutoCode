@@ -140,13 +140,29 @@ select{
 }
 
 #mocha-stats{
-  inset: auto auto 15px 10px;
+  position:absolute;
+  inset: 5px 10px auto auto;
   background-color: var(--dark-surface1,white);
   padding: 0.5rem !important;
   border-radius: 10px;
   box-shadow: 0px 5px 20px #000;
 }
-
-#mocha-stats *{
+#mocha-stats .passes *{
+  color:#00d6b2;
+  font-weight:bold;
+}
+#mocha-stats .failures *{
+  color:#c00;
+  font-weight:bold;
+}
+#mocha-stats .duration,
+#mocha-stats .duration *{
   color:var(--dark-primarytext) !important;
+}
+#mocha ul:not(#mocha-stats){
+  display:flex;
+  flex-direction:column;
+}
+.suite{
+  order:2;
 }

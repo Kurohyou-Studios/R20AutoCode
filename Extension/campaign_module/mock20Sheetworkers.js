@@ -101,21 +101,19 @@ const getSectionIDs = (sectionName,callback) => {
 const generateRowID = () => {
   var a = 0,
     b = [];
-  return () => {
-    var c = (new Date).getTime() + 0,
-      d = c === a;
-    a = c;
-    for (var e = Array(8), f = 7; 0 <= f; f--) e[f] = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".charAt(c % 64), c = Math.floor(c / 64);
-    c = e.join("");
-    if (d) {
-      for (f = 11; 0 <= f && 63 === b[f]; f--) b[f] = 0;
-      b[f]++;
-    }
-    else
-      for (f = 0; 12 > f; f++) b[f] = Math.floor(64 * Math.random());
-    for (f = 0; 12 > f; f++) c += "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".charAt(b[f]);
-    return c.replace(/_/g, 'Z');
-  };
+  var c = (new Date).getTime() + 0,
+    d = c === a;
+  a = c;
+  for (var e = Array(8), f = 7; 0 <= f; f--) e[f] = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".charAt(c % 64), c = Math.floor(c / 64);
+  c = e.join("");
+  if (d) {
+    for (f = 11; 0 <= f && 63 === b[f]; f--) b[f] = 0;
+    b[f]++;
+  }
+  else
+    for (f = 0; 12 > f; f++) b[f] = Math.floor(64 * Math.random());
+  for (f = 0; 12 > f; f++) c += "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".charAt(b[f]);
+  return c.replace(/_/g, 'Z');
 };
 
 /**
@@ -195,15 +193,6 @@ const finishRoll = () => {
 //
 // Helper Functions for the mock Roll20 Functions
 //
-
-/**
- * Function to convert a specific attribute name to the generic cascade attribute name.
- * @param {string} key - Attribute name
- * @returns {string}
- */
-const getCascRef = (key) => {
-  return key.replace(/(repeating_.+?_).+?(_.+)/,'$1\$X$2');
-};
 
 /**
  * Function to pseudo trigger sheetworker listeners
