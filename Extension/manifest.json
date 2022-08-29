@@ -18,7 +18,8 @@
     {
       "resources":[
         "/generic_code/interface.css","/generic_code/AutocodeGeneric.js","/test_framework/mocha10.css","/test_framework/mocha10.js","/test_framework/chai.js",
-        "/campaign_module/campaignInject.js","/campaign_module/campaignInject.css","/campaign_module/sheetDialog.js","/campaign_module/mock20Sheetworkers.js"
+        "/campaign_module/campaignInject.js","/campaign_module/campaignInject.css","/campaign_module/sheetDialog.js","/campaign_module/mock20Sheetworkers.js",
+        "/api_module/apiInject.js","/api_module/apiInject.css","/api_module/apiDialog.js", "/api_module/apiInteract.js"
       ],
       "matches":["*://*.roll20.net/*","*://*.roll20staging.net/*"]
     }

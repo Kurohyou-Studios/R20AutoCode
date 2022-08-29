@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Material+Icons&display=swap");
-.material-icons {
+.material-icons.material-icons {
+  /* Declaration doubled to override R20 defaults */
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
