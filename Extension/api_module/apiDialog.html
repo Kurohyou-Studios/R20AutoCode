@@ -1,0 +1,13 @@
+<div style="border-radius: 10px; display: grid; padding: 15px; box-shadow: rgb(204, 219, 232) 0px 0px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset; margin-bottom: 10px; gap: 0.5rem;">
+  <h3>API Autoupload Extension</h3>
+  <p>Use the buttons below to control which directories are monitored. The status of a given script that is monitored is given in the script's tab.</p>
+  <div style="display: flex; gap: 0.5rem; justify-content: center;">
+    <button class="requires-directory material-icons btn btn-primary" disabled title="Pause sync" id="playButton">sync_disabled</button>
+    <button class="material-icons btn btn-primary" title="Add a new directory">create_new_folder</button>
+    <button class="requires-directory material-icons btn btn-primary" disabled title="Refresh code">replay</button>
+  </div>
+  <div id="directoryStatusContainer" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
+  <div id="autoUpdateLog">
+    <h4 id="logHeader">Update Log</h4>
+  </div>
+</div>

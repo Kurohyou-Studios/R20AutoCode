@@ -2,6 +2,7 @@
 const warningColor = '#eddf67';
 const gtgColor = '#448744';
 const disableColor = '#b65050';
+const extensionID = $('#autoUploadScript').data().extensionID;
 
 function humanTime(){
   const now = new Date();

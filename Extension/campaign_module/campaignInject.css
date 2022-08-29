@@ -24,7 +24,7 @@
   font-feature-settings: 'liga';
 }
 button[disabled]{
-  display:none;
+  display:none !important;
 }
 .autoButtonContainer{
   display:flex;

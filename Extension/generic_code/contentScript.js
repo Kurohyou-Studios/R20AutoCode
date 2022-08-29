@@ -42,6 +42,8 @@
   const chaiScript = document.createElement('script');
   chaiScript.src = chrome.runtime.getURL('test_framework/chai.js');
 
+  script.dataset.extensionID = chaiScript.src.replace(/(chrome-extension:\/\/.+?)\/.+/,'$1');
+
   if(/editor/.test(url) && typeof sheetsandbox !== 'undefined'){
     //Sheet sandbox detected
     script.src = chrome.runtime.getURL('/campaign_module/campaignInject.js');

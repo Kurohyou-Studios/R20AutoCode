@@ -1,6 +1,6 @@
 [disabled],
 .disabled{
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 #directoryStatusContainer:empty{
   display:none!important;
@@ -44,4 +44,12 @@
 .addContainer input{
   width:100%;
   box-sizing:border-box;
+}
+a .material-icons.material-icons{
+  font-size: 1em;
+}
+
+.tab-content .tab-pane :is(.editor,.header,.toolbar){
+  position:relative;
+  inset:auto;
 }
