@@ -55,7 +55,7 @@ async function findFiles(){
   for await (let handle of sheetHandles.directory.values()){
     if(handle.kind === 'file'){
       const file = await handle.getFile();
-      const text = await file.text();
+      let text = await file.text();
       if(handle.name === 'translation.json'){
         foundFiles.translation.unshift(handle);
         try{
@@ -85,10 +85,15 @@ async function findFiles(){
           sheetHandles.files.css.errors.push(`Suspect text found in CSS file. Review for low and/or high byte characters`);
           backColor = warningColor;
         }
+        text = text.replace(/@charset.+/g,'');
         const problems = Object.entries(evilLogMatch)
           .reduce( (memo, [test,found] ) => {
             if(found){
-              memo.push(`${test}:${found.join(', ')}`);
+              if(test === '@charset'){
+                memo.push(`REMOVED ${test}:${found.join(', ')}`);
+              }else{
+                memo.push(`${test}:${found.join(', ')}`);
+              }
             }
             return memo;
           },[]);
@@ -104,12 +109,6 @@ async function findFiles(){
         for await(let transHandle of handle.values()){
           if(transHandle.kind === 'file' && transHandle.name.endsWith('.json')){
             foundFiles.translation.push(transHandle);
-          }
-        }
-      }else if(handle.name === 'tests'){
-        for await(let testHandle of handle.values()){
-          if(testHandle.name.endsWith('.test.js')){
-            sheetHandles.tests.push(testHandle);
           }
         }
       }
@@ -135,123 +134,12 @@ async function findFiles(){
 const updateTestInterface = async function(file){
   if(!sheetHandles.files.html.handle) return;
   const outerContainer = sheetsandbox.parentElement;
-  if(sheetHandles.tests.length){
-    const testsContainer = document.getElementById('mocha') || document.createElement('div');
-    testsContainer.id = 'mocha';
-    testsContainer.style['grid-row'] = '1 / -1';
-    testsContainer.style['grid-column'] = '2';
-    sheetsandbox.style['grid-template-columns'] = '300px minmax(500px,800px)';
-    sheetsandbox.append(testsContainer);
-    outerContainer.style.width = 'auto';
-    outerContainer.style.top = 0;
-    outerContainer.style.left = 0;
-    await runTests(file);
-  }else{
-    const testsContainer = document.getElementById('mocha');
-    if(testsContainer){
-      testsContainer.remove();
-    }
-    outerContainer.style.removeProperty('width');
-    sheetsandbox.style['grid-template-columns'] = '1fr';
+  const testsContainer = document.getElementById('mocha');
+  if(testsContainer){
+    testsContainer.remove();
   }
-};
-
-const runTests = async function(file){
-  clearTimeout(failureSearchID);
-  $('#mocha').empty();
-  mocha.suite.suites= [];
-  mocha.suite._bail = false;
-  document.getElementById('autoTestSheet')?.remove();
-
-  //Load the sheet's js code
-  const code = await file.text();
-  resetSheet(code);
-  let sheetCode = await new Promise(resolve =>{
-    code.replace(/<script type=['"]text\/worker['"]>((?:\n|.)+)<\/script>/,(match,src)=>resolve(src));
-  });
-
-  //Load test js files
-  const testPromises = sheetHandles.tests.map(async (handle) => {
-    const file = await handle.getFile();
-    const code = await file.text();
-    sheetCode += `\n${code}`;
-  });
-  await Promise.all(testPromises);
-
-  //Create script tag for all test code
-  const script = $(`<script id="autoTestSheet">${sheetCode}</script>`);
-  $('body').append(script);
-  console.log('listeners',listeners);
-  await ensureTestDependencies();
-  const firstFail = $('.test.fail');
-  console.log('firstFail',firstFail);
-  lookForFailures();
-};
-
-/**
- * 
- * @param {string} prevDur - The previous duration content
- */
-const lookForFailures = (prevDur)=>{
-  const fails = $('.fail.test');
-  fails.css({order:'1'});
-  console.log('fails',fails);
-  const parents = fails.parents('.suite');
-  parents.css({order:'1'});
-  console.log('parents',parents);
-  const currentDur = $('#mocha-stats .duration em').text();
-  console.log('=== Duration ===\nprevious:',prevDur,'\ncurrent:',currentDur);
-  if(prevDur !== currentDur){
-    failureSearchID = setTimeout(lookForFailures,200,currentDur);
-  }
-}
-
-/**
- * Checks if the test scripts have been added. If they have, returns. If they haven't returns a promise that resolves to undefined.
- * @returns {Promise}
- */
-const ensureTestDependencies = ()=>{
-  if($('#autoTestSheet')){
-    return mocha.run();
-  }
-  return new Promise(resolve => {
-    setTimeout(()=>{
-      resolve(ensureTestDependencies());
-    },100);
-  });
-};
-
-const resetSheet = (code) => {
-  resetSheetState();
-  if(code){
-    resetListeners();
-    sheetHTML = parse.parseFromString(code,'text/html');
-  }
-  const attrs = Array.from(sheetHTML.querySelectorAll(':not(div[class^="repeating_"]) [name^="attr_"]'));
-  attrs.forEach((el)=>{
-    if(!el.name || Array.from($(el).parents('fieldset')).length) return;
-    const attrName = el.name.replace(/^attr_/,'');
-    if(!el.type || sheetState.hasOwnProperty(attrName)) return;
-    if(el.tagName === 'SELECT'){
-      console.log(el.name,el.title);
-      const defaultValue = Array
-      .from(el.children)
-      .find( (opt) => opt.selected )
-      ?.value || '';
-      sheetState[attrName] = defaultValue;
-    }else{
-      const defaultValue = /checkbox|radio/.test(el.type) ?
-        (
-          el.checked ?
-            el.value || 'ON' :
-            '0'
-        ) :
-        el.value || '';
-      if(el.type !== 'radio' || defaultValue !== '0'){
-        sheetState[attrName] = defaultValue;
-      }
-    }
-  });
+  outerContainer.style.removeProperty('width');
+  sheetsandbox.style['grid-template-columns'] = '1fr';
 };
 
 //Language name conversion from [stackoverflow](https://stackoverflow.com/questions/25131388/how-do-you-convert-a-language-code-to-the-language-name-in-javascript)

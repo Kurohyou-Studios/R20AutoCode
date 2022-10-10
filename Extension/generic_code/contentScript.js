@@ -30,17 +30,6 @@
 
   const url = window.location.href;
   const injectJS = document.createElement('script');
-  const mockJS = document.createElement('script');
-
-  const mochaCSS = document.createElement('link');
-  mochaCSS.rel = 'stylesheet';
-  mochaCSS.href = chrome.runtime.getURL('test_framework/mocha10.css');
-
-  const mochaScript = document.createElement('script');
-  mochaScript.src = chrome.runtime.getURL('test_framework/mocha10.js');
-
-  const chaiScript = document.createElement('script');
-  chaiScript.src = chrome.runtime.getURL('test_framework/chai.js');
 
   script.dataset.extensionID = chaiScript.src.replace(/(chrome-extension:\/\/.+?)\/.+/,'$1');
 
@@ -49,15 +38,13 @@
     script.src = chrome.runtime.getURL('/campaign_module/campaignInject.js');
     style.href = chrome.runtime.getURL('/campaign_module/campaignInject.css');
     injectJS.src = chrome.runtime.getURL('/campaign_module/sheetDialog.js');
-    mockJS.src = chrome.runtime.getURL('/campaign_module/mock20Sheetworkers.js');
   }else if(/campaigns\/scripts/.test(url)){
     //Sheet sandbox detected
     script.src = chrome.runtime.getURL('/api_module/apiInject.js');
     style.href = chrome.runtime.getURL('/api_module/apiInject.css');
     injectJS.src = chrome.runtime.getURL('/api_module/apiDialog.js');
-    // mockJS.src = chrome.runtime.getURL('/api_module/mock20Sheetworkers.js');
   }
-  head.append(interfaceStyle,mochaCSS,mochaScript,chaiScript,style,iconLink);
-  body.append(genericScript,script,injectJS,mockJS);
+  head.append(interfaceStyle,style,iconLink);
+  body.append(genericScript,script,injectJS);
   console.log('scripts injected');
 })();
