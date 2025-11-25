@@ -24,6 +24,7 @@
   style.id = `autoUploadStyle`;
   style.rel = 'stylesheet';
 
+
   const iconLink = document.createElement('link');
   iconLink.rel = 'stylesheet';
   iconLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
@@ -31,7 +32,7 @@
   const url = window.location.href;
   const injectJS = document.createElement('script');
 
-  script.dataset.extensionID = chaiScript.src.replace(/(chrome-extension:\/\/.+?)\/.+/,'$1');
+  script.dataset.extensionID = genericScript.src.replace(/(chrome-extension:\/\/.+?)\/.+/,'$1');
 
   if(/editor/.test(url) && typeof sheetsandbox !== 'undefined'){
     //Sheet sandbox detected
@@ -39,7 +40,7 @@
     style.href = chrome.runtime.getURL('/campaign_module/campaignInject.css');
     injectJS.src = chrome.runtime.getURL('/campaign_module/sheetDialog.js');
   }else if(/campaigns\/scripts/.test(url)){
-    //Sheet sandbox detected
+    //API Page detected
     script.src = chrome.runtime.getURL('/api_module/apiInject.js');
     style.href = chrome.runtime.getURL('/api_module/apiInject.css');
     injectJS.src = chrome.runtime.getURL('/api_module/apiDialog.js');

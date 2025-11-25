@@ -1,9 +1,14 @@
+.container{
+  --disableColor:#b65050;
+  --activeColor:#448744;
+  container: script-container / inline-size;
+}
 [disabled],
 .disabled{
   /* pointer-events: none; */
 }
 #directoryStatusContainer:empty{
-  display:none!important;
+  display:non;
 }
 .nav > li > :is(button,a){
   padding: 0 8px;
@@ -35,11 +40,9 @@
 #scriptorder .addContainer{
   display:grid;
   gap:0.5rem;
-  grid-template-columns:15rem auto;
-  transition:width 500ms;
-  justify-content:end;
-  overflow:hidden;
+  grid-template-columns:1fr auto;
   padding:0;
+  z-index: 20000;
 }
 .addContainer input{
   width:100%;
@@ -52,4 +55,291 @@ a .material-icons.material-icons{
 .tab-content .tab-pane :is(.editor,.header,.toolbar){
   position:relative;
   inset:auto;
+}
+/* --- Colors & base --- */
+:root {
+  --r20-bg: #171718;
+  --color-surface1: #1b1b1b;
+  --r20-fg: #ddd;
+  --r20-muted: #808187;
+  --r20-border: #2e2e2e;
+  --r20-accent: #4ea1ff;
+}
+
+/* Sidebar positioning */
+#scriptorder {
+  position: fixed;
+  top: 85px;
+  right: 0;
+  box-sizing: border-box;
+  /* Width increased */
+  width: calc((100dvw - 100cqw) / 2 - 25px);
+  max-width:fit-content;
+  min-width: 120px;
+  max-height: calc(100vh - 110px);
+  interpolate-size: allow-keywords;
+  background: var(--color-surface1);
+  border: 1px solid var(--r20-border);
+  padding: 6px 4px 6px 26.5px;
+  z-index: 20000;
+
+  list-style: none;
+
+  /* For ordering items */
+  display: flex;
+  flex-direction: column;
+
+  /* Scrollbar (Firefox) */
+  scrollbar-width: thin;
+  scrollbar-color: #333 #111;
+  transition: width .25s linear;
+  /* Compact list items */
+  &:before,
+  &:after{
+    display: none;
+  }
+  > li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    > a {
+      display: block;
+      padding: 2px 8px;
+      margin: 1px 0;
+      font-size: 14px;
+      line-height: 1.15;
+      text-decoration: none;
+
+      color: var(--r20-fg);
+
+      border-radius: 4px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      anchor-name: var(--_containerName);
+
+/* Hover effect */
+      &:hover {
+        background: #27272a;
+        color: #fff;
+      }
+/* Inactive visual style (but always shown now) */
+      &.disabled{
+        color: var(--r20-muted);
+        font-style: italic;
+        opacity: 0.9;
+      }
+/* Stronger active scripts */
+      &:not(.disabled){
+        font-weight: 600;
+        color: #fff;
+      }
+      &[href="#script-library"],
+      &[href="#script-new"]{
+        color: inherit !important;
+      }
+      &:not([href="#script-library"]):not([href="#script-new"]){
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+/* Red active highlight */
+    &.active > a,
+    & > a[aria-expanded="true"]{
+      background: var(--_syncColor);
+      color: #fff;
+      border: none;
+      box-shadow: none;
+    }
+    &:not(.active):not(:has(a[aria-expanded="true"])) > a{
+      --_inUseColor: color-mix(in lch, var(--_syncColor),transparent 50%);
+    }
+  }
+  &:hover,
+  &:has(+ .tab-content :where(.restartsandbox,.btn.active,.btn.inactive,.btn-danger,#api_sandbox_version,.savescript):hover){
+    width: auto;
+  }
+}
+li{
+  &:has(.sync-style){
+    --_syncColor: var(--disableColor);
+    --_inUseColor: var(--_syncColor);
+    a{
+      &,
+      &:hover{
+        background-color: var(--_inUseColor) !important;
+      }
+    }
+    &:has(.active-sync){
+      --_syncColor: var(--activeColor);
+      --_inUseColor: var(--_syncColor);
+    }
+  }
+}
+#scriptorder,
+.restartsandbox,
+#api_sandbox_version{
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+.nav-tabs{
+  /* anchor works in everything except firefox for android */
+  anchor-name: --script-anchor;
+}
+#script-library:not(.active),
+#script-library:not(.active) #script-previews,
+#script-library:not(.active) .preview[data-shortname="instructions"],
+.script.tab-pane:not(.active):not(#script-library){
+  display: contents;
+  > :not(#api_sandbox_version):not(.restartsandbox):not(#script-previews):not(.preview[data-shortname="instructions"]):not(:has(.btn:where(.active,.inactive))){
+    display: none;
+  }
+}
+/* override inline display styling when a script is selected from the drop down */
+.preview[data-shortname="instructions"]{
+  display: contents !important;
+  p:has(+#api_sandbox_version){
+    display: none;
+  }
+}
+button:is([data-scriptid],.deletescript,.togglescript,.savescript):where(.savescript,.active,.inactive,.btn-danger){
+  --_width: 22.5px;
+  position: fixed;
+  position-anchor: var(--_containerName);
+  top: anchor(top);
+  bottom: anchor(bottom);
+  display: grid;
+  grid-template-columns: 1fr 0;
+  padding: 0;
+  font-size: 14px;
+  transition-property: background, color,border-color,right, left;
+  transition-duration: 0.25s, 0.25s,0.25s, 0s,0s;
+  z-index: 20000;
+  color: transparent !important;
+  width: var(--_width);
+  text-align: center;
+  overflow: hidden;
+  &:before{
+    font-family: "Material Icons";
+    color: var(--color-filled-button-text);
+  }
+  &:where(.active,.inactive){
+    right: anchor(left);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    &.active{
+      background-color: var(--activeColor);
+      &:before{
+        content: 'toggle_on';
+      }
+    }
+    &.inactive{
+      background-color: var(--disableColor);
+      &:before{
+        content: 'toggle_off';
+      }
+    }
+    &:has(+ .savescript){
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+  &.savescript{
+    right: calc(anchor(left) - var(--_width));
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    &:before{
+      content: 'save';
+    }
+  }
+  &.btn-danger{
+    right: anchor(right);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    &:before{
+      content: 'delete_forever';
+    }
+  }
+}
+#api_sandbox_version{
+  /* position as needed */
+  position: fixed;
+  position-anchor: --script-anchor;
+  bottom: anchor(top);
+  left: anchor(left);
+	right:anchor(right);
+  z-index: 15000;
+  border-bottom-left-radius: 0;
+}
+.restartsandbox{
+  position: fixed;
+  position-anchor: --script-anchor;
+  top: anchor(bottom);
+  right: anchor(right);
+	left:anchor(left);
+  z-index: 15000;
+  border-top-left-radius: 0;
+  transition-property: background, color,border-color,right, left;
+  transition-duration: 0.25s, 0.25s,0.25s, 0s,0s;
+  container: restart-container / inline-size;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 0 0;
+  color: transparent !important;
+  padding: 0;
+  &:before{
+    content: 'settings_power';
+    font-family: 'Material Icons';
+    font-size: 24px;
+    place-self: center;
+    color: var(--color-filled-button-text);
+  }
+}
+
+/* Content shift to make room */
+/* .container.main-content, .container {
+  padding-left: 20px;
+} */
+
+/* Responsive fallback */
+@media (max-width: 1200px) {
+  #scriptorder {
+    right: 12px;
+  }
+}
+
+/* Dark scrollbar (WebKit) */
+#scriptorder::-webkit-scrollbar {
+  width: 10px;
+}
+
+#scriptorder::-webkit-scrollbar-track {
+  background: #111;
+}
+
+#scriptorder::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 6px;
+  border: 2px solid #111;
+}
+
+#scriptorder::-webkit-scrollbar-thumb:hover {
+  background-color: #444;
+}
+
+
+
+
+
+
+/* ===============================
+   Mini Toolbar Above Script Sidebar
+   Works for all script types (custom or one-click)
+   =============================== */
+
+#warninglock, .alert.alert-danger{
+    display:none;
 }
